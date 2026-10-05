@@ -2,31 +2,61 @@
 
 A centralized repository for SQL examples, table structures, and templates for various systems. Designed for readability, quick searching, and easy adaptation into your own database projects.
 
-Currently, this repository is in its initial setup phase. Once populated, it will serve as a structured knowledge base utilizing Markdown files to provide detailed explanations and logic behind every SQL query.
+Every template is a Markdown file that carries the SQL, the parameters it expects, and an explanation of the logic behind it.
 
 ---
 
-**📂 Planned Repository Structure**
+**📂 Repository Structure**
 
-Data will be organized into directories based on the type of system or feature (`{:type}`) to keep things clean and scalable:
+Data is organized into directories based on the type of system or feature (`{:type}`):
 
-*   **`/{type}/README.md`** — The central index for a specific category. It will provide an overview and contain file pointers with short descriptions linking to all the specific template files within that folder.
+*   **`/{type}/README.md`** — The central index for a category, with file pointers and short descriptions of every template in that folder.
 *   **`/{type}/{template-name}.md`** — The deep-dive file containing the actual SQL syntax, expected parameters, and full explanations.
 
-**Example of Future Layout:**
+**Current layout:**
 ```text
 sql-vault/
 ├── README.md                    <-- Main index (You are here)
-├── {type_a}/                    <-- Category folder
-│   ├── README.md                <-- Index and short descriptions for {type_a} templates
-│   ├── {template_name_1}.md     <-- Specific SQL template and explanation
-│   └── {template_name_2}.md     <-- Specific SQL template and explanation
-└── {type_b}/                    <-- Another category folder
-    ├── README.md                <-- Index and short descriptions for {type_b} templates
-    └── {template_name}.md       <-- Specific SQL template and explanation
+├── knowledge-base/              <-- RAG tables: versioned text and vectors
+│   ├── README.md                <-- Index for the knowledge-base templates
+│   ├── global-knowledge.md      <-- knowledge_contents, knowledge_embeddings
+│   └── personal-knowledge.md    <-- personal_knowledge_contents, personal_knowledge_embeddings
+└── chat/                        <-- Chat history: sessions, messages, message vectors
+    ├── README.md                <-- Index for the chat templates
+    ├── session-messages.md      <-- chat_sessions, chat_messages
+    └── message-embeddings.md    <-- chat_message_embeddings
 ```
 
-*(Note: Categories and template files are currently being developed and will be added soon.)*
+---
+
+**📚 Templates**
+
+| Category | Template | Tables |
+|---|---|---|
+| `knowledge-base/` | [`global-knowledge.md`](knowledge-base/global-knowledge.md) | `knowledge_contents`, `knowledge_embeddings` |
+| `knowledge-base/` | [`personal-knowledge.md`](knowledge-base/personal-knowledge.md) | `personal_knowledge_contents`, `personal_knowledge_embeddings` |
+| `chat/` | [`session-messages.md`](chat/session-messages.md) | `chat_sessions`, `chat_messages` |
+| `chat/` | [`message-embeddings.md`](chat/message-embeddings.md) | `chat_message_embeddings` |
+
+Each table is defined exactly once, in exactly one template. Where two templates share a
+design, the second refers to the first rather than restating it.
+
+---
+
+**🔧 Dialect Notes**
+
+The SQL is written to be dialect-neutral: it uses no vendor-specific syntax, so a template
+reads the same on any engine and runs as written on any engine that supports composite
+primary keys. Two constructs have no portable form and are handled deliberately:
+
+*   **`VECTOR(1536)`** is a placeholder, not a real type. Each template carries a table of
+    the real type per engine, and the width must match your embedding model.
+*   **Generated message ids** are declared as a bare `INTEGER PRIMARY KEY`, with the
+    per-engine spelling (`AUTOINCREMENT`, `GENERATED ALWAYS AS IDENTITY`, `AUTO_INCREMENT`,
+    `IDENTITY`) in the template's Explanation.
+
+Each template also notes what its schema does *not* enforce — foreign keys need enabling
+per connection on SQLite, and some cascades stop short.
 
 ---
 
