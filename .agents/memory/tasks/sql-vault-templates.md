@@ -1,7 +1,7 @@
 ---
 name: sql-vault-templates
 description: Task record for the first batch of SQL Vault templates — four RAG knowledge tables and two chat tables, written as portable SQL inside Markdown.
-status: in-progress
+status: done
 ---
 
 # SQL Vault templates — knowledge base and chat
@@ -95,3 +95,36 @@ preserved:
   Documented with both remedies.
 
 All seven tables across the vault are now defined exactly once, verified by grep.
+
+### 2026-10-05 — Task 4 — `docs/sql-vault-templates`
+
+Rewrote the root `README.md`. It had described a *planned* structure with placeholder
+folder names and said categories "will be added soon"; it now lists the two categories
+that exist, indexes all four templates against the tables they define, and states the
+dialect policy — the two constructs with no portable form, and where each template
+explains what its schema does not enforce.
+
+The README's own `Objective` / `SQL Statement` / `Explanation` format was kept. Every
+template follows it, which is why the section headers match exactly across all four.
+
+Record closed: `status: done`.
+
+---
+
+## Verification
+
+Extracted every ```sql block and checked the vault mechanically rather than by eye:
+
+- seven `CREATE TABLE` statements, each appearing exactly once across five files
+- no `AUTOINCREMENT`, `ENGINE=`, or vendor vector type inside any SQL block — the
+  `pgvector` matches are in prose substitution tables, which is where they belong
+- `.agents/plans/` stayed out of every commit; confirmed with `check-ignore` before the
+  first commit and by inspecting the staged file list before each
+- `LICENSE` was never staged and still differs from `master` by line endings only
+
+Not verified: the SQL was never executed. No engine was available in the sandbox, so
+these templates are correct by construction and by reading, not by running. Anyone
+adopting them should run the statements against their target engine once — which is also
+the only way to settle the `VECTOR` and identity-column substitutions for their setup.
+
+Nothing was pushed and no pull request was opened; both are gated on the owner's yes.
