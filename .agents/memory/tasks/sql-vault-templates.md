@@ -56,3 +56,18 @@ from being published. No template files written yet.
 endings only — CRLF on disk against LF in the commit — with no content change. Both
 are left untouched and never staged, so the template work does not carry an unrelated
 whitespace diff.
+
+### 2026-10-05 — Task 2 — `docs/sql-vault-templates`
+
+Wrote `knowledge-base/README.md`, `knowledge-base/global-knowledge.md`, and
+`knowledge-base/personal-knowledge.md`.
+
+Each of the four tables is defined exactly once. The personal template inherits the
+content/embedding rationale from the global one by reference rather than restating it,
+because two copies of the same reasoning would drift. Verified by grep: four
+`CREATE TABLE` statements across three files, no statement appearing twice.
+
+`personal-knowledge.md` adds one point the global template does not cover — that a
+personal `knowledge_key` and a global one are separate namespaces, so a user writing
+`how-to-reset` does not shadow the shared entry, and which one wins is the
+application's decision rather than the database's.
