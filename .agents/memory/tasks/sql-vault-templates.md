@@ -71,3 +71,27 @@ because two copies of the same reasoning would drift. Verified by grep: four
 personal `knowledge_key` and a global one are separate namespaces, so a user writing
 `how-to-reset` does not shadow the shared entry, and which one wins is the
 application's decision rather than the database's.
+
+### 2026-10-05 — Task 3 — `docs/sql-vault-templates`
+
+Wrote `chat/README.md`, `chat/session-messages.md`, and `chat/message-embeddings.md`.
+This replaced a two-table, one-template task: the owner supplied the full chat schema
+after the plan was first written, and it carries a third table
+(`chat_message_embeddings`) while dropping `message_index` from `chat_messages`.
+
+Kept `INTEGER PRIMARY KEY` bare rather than `AUTOINCREMENT`, on the owner's
+confirmation that portability wins, and put the per-engine spelling in a table. Verified
+by extracting every ```sql block and grepping it: no `AUTOINCREMENT` survives in any
+statement.
+
+Two behaviours in the source schema are documented as gaps rather than quietly
+preserved:
+
+- `chat_sessions.updated_at` defaults correctly on insert and then goes stale, since
+  nothing in the schema advances it when a message arrives. Left to the application or a
+  trigger, and said so.
+- The `chat_messages` → `chat_message_embeddings` cascade does not fire on SQLite, which
+  cascades only one level. Deleting a session there leaves orphaned vectors silently.
+  Documented with both remedies.
+
+All seven tables across the vault are now defined exactly once, verified by grep.
