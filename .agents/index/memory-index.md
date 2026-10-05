@@ -15,7 +15,7 @@ untracked scratch and are deleted when the work lands.
 
 | File | What it covers | Status |
 |---|---|---|
-| [`tasks/sql-vault-templates.md`](tasks/sql-vault-templates.md) | The first batch of vault templates: four RAG knowledge tables and two chat tables, written as portable SQL inside Markdown. | in-progress |
+| [`tasks/sql-vault-templates.md`](tasks/sql-vault-templates.md) | The first batch of vault templates: four RAG knowledge tables and two chat tables, written as portable SQL inside Markdown. | done |
 
 ## Decisions
 
